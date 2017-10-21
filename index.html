@@ -1,0 +1,21 @@
+<html>
+<body>
+	<button onclick="httpGetAsync('https://mercury.postlight.com/parser?url=https://www.theguardian.com/us-news/2017/oct/21/steve-bannon-blasts-george-bush-and-calls-for-republican-revolt')">Click me!</button>
+	<p id="demo"></p>
+<script >
+function httpGetAsync(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            var json = JSON.parse(this.responseText);
+            document.getElementById("demo").innerHTML = json.content;
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.setRequestHeader('Content-Type','application/json');
+    xmlHttp.setRequestHeader('x-api-key','GZ27oVFMPATQWs49ONzCJELnQvRouVt47pJQLmPq');
+    xmlHttp.send(null);
+}
+</script>
+</body>
+</html>
