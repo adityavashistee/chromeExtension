@@ -59,7 +59,7 @@ xhr.addEventListener("readystatechange", function () {
     //percentBias=json.percentageSentiment;
   }
 });
-alert(data);
+//alert(data);
 xhr.open("POST", "http://ec2-18-220-130-31.us-east-2.compute.amazonaws.com/gettype");
 xhr.setRequestHeader("content-type", "application/json");
 
