@@ -8,17 +8,17 @@ chrome.runtime.onInstalled.addListener(details => {
   console.log('previousVersion', details.previousVersion);
 });
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  $.ajax({
-    	method: "POST",
-        url: "http://0.0.0.0:8081/try",
-        data: { percentageS: 51 }
-    }).then(function(data) {
-    	if(data.percentageSentiment>50){
-    		document.getElementById("sentiment").innerHTML = "Republic";
-    	}
-    });
-});
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//   $.ajax({
+//     	method: "POST",
+//         url: "http://0.0.0.0:8081/try",
+//         data: { percentageS: 51 }
+//     }).then(function(data) {
+//     	if(data.percentageSentiment>50){
+//     		document.getElementById("sentiment").innerHTML = "Republic";
+//     	}
+//     });
+// });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
 var curr_url;
@@ -26,6 +26,7 @@ chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT}
    function(tabs){
         curr_url = tabs[0].url;
         httpGetAsync('https://mercury.postlight.com/parser?url='+curr_url);
+        //alert(textToSend);
    }
 );
 
@@ -35,7 +36,7 @@ function httpGetAsync(theUrl)
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             var json = JSON.parse(this.responseText);
-            alert(json.content);
+            callTheAPI(json.content);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.setRequestHeader('Content-Type','application/json');
@@ -43,25 +44,9 @@ function httpGetAsync(theUrl)
     xmlHttp.send(null);
 }
 
-//alert(curr_url);
-	//alert("here");
-  // $.ajax({
-  //   	method: "POST",
-  //       url: "http://0.0.0.0:8081/try",
-  //       data: { percentageS: 51 }
-  //   }).then(function(data) {
-
-  //   	if(data.percentageSentiment>50){
-  //   		alert("Republican");
-  //   	}
-  //   	else{
-  //   		alert("Demo");
-  //   	}
-  //   });
-
-
+ function callTheAPI(textToSend){ 
   var data = JSON.stringify({
-  "percentageS": 123
+  "text": textToSend
 });
 var percentBias=0;
 
@@ -70,47 +55,48 @@ xhr.withCredentials = true;
 
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
-    var json = JSON.parse(this.responseText);
-    percentBias=json.percentageSentiment;
+    alert(this.responseText);
+    //percentBias=json.percentageSentiment;
   }
 });
-
-xhr.open("POST", "http://0.0.0.0:8081/try");
+alert(data);
+xhr.open("POST", "http://ec2-18-220-130-31.us-east-2.compute.amazonaws.com/gettype");
 xhr.setRequestHeader("content-type", "application/json");
 
 xhr.send(data);
-
-if(percentBias>50){
-    alert("Republican");
 }
-else {alert("Democrat");}
+
+// if(percentBias>50){
+//     alert("Republican");
+// }
+// else {alert("Democrat");}
 //alert(data);
 });
 
 // This block is new!
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if( request.message === "open_new_tab" ) {
-      chrome.tabs.create({"url": request.url});
-    }
-  }
-);
+// chrome.runtime.onMessage.addListener(
+//   function(request, sender, sendResponse) {
+//     if( request.message === "open_new_tab" ) {
+//       chrome.tabs.create({"url": request.url});
+//     }
+//   }
+// );
 
 
-//chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) { insertDictionaryScript();});
+// //chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) { insertDictionaryScript();});
 
-chrome.tabs.onCreated.addListener(function(tabId, changeInfo, tab) {
-  $.ajax({
-    	method: "POST",
-        url: "http://0.0.0.0:8081/try",
-        data: { percentageS: 51 }
-    }).then(function(data) {
-    	if(data.percentageSentiment>50){
-    		document.getElementById("sentiment").innerHTML = "Republic";
-    	}
-    });
-});
+// chrome.tabs.onCreated.addListener(function(tabId, changeInfo, tab) {
+//   $.ajax({
+//     	method: "POST",
+//         url: "http://0.0.0.0:8081/try",
+//         data: { percentageS: 51 }
+//     }).then(function(data) {
+//     	if(data.percentageSentiment>50){
+//     		document.getElementById("sentiment").innerHTML = "Republic";
+//     	}
+//     });
+// });
 
-//chrome.browserAction.setBadgeText({text: 'Van'});
+// //chrome.browserAction.setBadgeText({text: 'Van'});
 
 console.log('\' Hello \' World! Event Page for Browser Action');
