@@ -1,25 +1,47 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <!-- build:css styles/popup-vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/main.css -->
-    <link href="styles/main.css" rel="stylesheet">
-    <!-- endbuild -->
-  </head>
-  <body>
-    <h1>'Allo, 'Allo!</h1>
+    <head>
+        <title>Hello jQuery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="background.js">
+        <script>
+        $(document).ready(function() {
+    $.ajax({
+        method: "POST",
+        url: "http://0.0.0.0:8081/try",
+        data: { percentageS: 49 }
+    }).then(function(data) {
+        if(data.percentageSentiment>50){
+            document.getElementById("sentiment").innerHTML = "Republic";
+        }
+        else {document.getElementById("sentiment").innerHTML = "Democratic";}
+    });
+});
 
-    <!-- build:js scripts/popup-vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
-    <!-- endbuild -->
+        </script>
 
-    <!-- build:js scripts/popup.js -->
-    <script src="scripts/popup.js"></script>
-    <!-- endbuild -->
-  </body>
+        <script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.ajax({
+        method: "POST",
+        url: "http://0.0.0.0:8081/try",
+        data: { percentageS: 51 }
+    }).then(function(data) {
+        if(data.percentageSentiment>50){
+            alert("Repub");
+        }
+        else {alert("Democ");}
+    });
+});
+});
+</script>
+    </head>
+
+    <body>
+        <div>
+            <button id="btn">Get Sentiment</button>
+            <p class="sentiment_percentage" id="sentiment"></p>
+        </div>
+    </body>
 </html>
